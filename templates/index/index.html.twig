@@ -5,9 +5,9 @@
 {% block body %}
     <h2>Short your url</h2>
 
-    <form id="shortUrlForm" action="{{ path('app_short_url') }}" method="post">
+    <form id="shortUrlForm">
         <input type="text" name="url" id="urlInput" placeholder="Enter your url">
-        <input type="submit" value="Short">
+        <button type="submit">Short</button>
     </form>
 
     <div id="responseContainer"></div>
@@ -18,21 +18,27 @@
 
             var urlInput = document.getElementById('urlInput').value;
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '{{ path('app_short_url') }}', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var responseContainer = document.getElementById('responseContainer');
-                        responseContainer.innerHTML = xhr.responseText;
+            fetch('{{ path('app_short_url') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'url=' + encodeURIComponent(urlInput),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.errors) {
+                        var errorContainer = document.getElementById('responseContainer');
+                        errorContainer.innerHTML = 'Error: ' + data.errors.join(', ');
                     } else {
-                        console.error('Error:', xhr.status, xhr.statusText);
+                        var responseContainer = document.getElementById('responseContainer');
+                        responseContainer.innerHTML = data.shortUrl;
                     }
-                }
-            };
-
-            xhr.send('url=' + encodeURIComponent(urlInput));
+                })
+                .catch(error => {
+                    var errorContainer = document.getElementById('responseContainer');
+                    errorContainer.innerHTML = 'Error: ' + error.message;
+                });
         });
     </script>
 {% endblock %}
