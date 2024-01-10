@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Url shortener{% endblock %}
+
+{% block body %}
+    <h2>Short your url</h2>
+
+    <form id="shortUrlForm" action="{{ path('app_short_url') }}" method="post">
+        <input type="text" name="url" id="urlInput" placeholder="Enter your url">
+        <input type="submit" value="Short">
+    </form>
+
+    <div id="responseContainer"></div>
+
+    <script>
+        document.getElementById('shortUrlForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var urlInput = document.getElementById('urlInput').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ path('app_short_url') }}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var responseContainer = document.getElementById('responseContainer');
+                        responseContainer.innerHTML = xhr.responseText;
+                    } else {
+                        console.error('Error:', xhr.status, xhr.statusText);
+                    }
+                }
+            };
+
+            xhr.send('url=' + encodeURIComponent(urlInput));
+        });
+    </script>
+{% endblock %}
