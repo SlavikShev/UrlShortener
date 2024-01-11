@@ -11,6 +11,10 @@
     </form>
 
     <div id="responseContainer"></div>
+    <div id="linkForStats"></div>
+
+    <p>To see stats of your short link you need to add /stats in the end of your link</p>
+    <p>For example if you short link is http://localhost:8080/aaaaaae to see stats you link will be http://localhost:8080/aaaaaae/stats</p>
 
     <script>
         document.getElementById('shortUrlForm').addEventListener('submit', function(event) {
@@ -28,17 +32,15 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.errors) {
-                        var errorContainer = document.getElementById('responseContainer');
+                        const errorContainer = document.getElementById('responseContainer');
                         errorContainer.innerHTML = 'Error: ' + data.errors.join(', ');
                     } else {
-                        var responseContainer = document.getElementById('responseContainer');
+                        const responseContainer = document.getElementById('responseContainer');
+                        const linkForStats = document.getElementById('linkForStats');
                         responseContainer.innerHTML = data.shortUrl;
+                        linkForStats.innerHTML = `<a href="${data.shortUrl}/stats">Show short link stats</a>`;
                     }
                 })
-                .catch(error => {
-                    var errorContainer = document.getElementById('responseContainer');
-                    errorContainer.innerHTML = 'Error: ' + error.message;
-                });
         });
     </script>
 {% endblock %}
