@@ -5,15 +5,21 @@
 {% block body %}
     <h2>Short your url</h2>
 
-    <form id="shortUrlForm">
-        <input type="text" name="url" id="urlInput" placeholder="Enter your url">
-        <button type="submit">Short</button>
+    <form id="shortUrlForm" class="form-inline mt-3">
+        <div class="form-group mb-2 d-flex">
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="url" id="urlInput" placeholder="Enter your URL">
+            </div>
+            <div class="col-sm-2 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary mb-2">Short</button>
+            </div>
+        </div>
     </form>
 
     <div id="responseContainer"></div>
     <div id="linkForStats"></div>
 
-    <p>To see stats of your short link you need to add /stats in the end of your link</p>
+    <p class="mt-5">To see stats of your short link you need to add /stats in the end of your link</p>
     <p>For example if you short link is http://localhost:8080/aaaaaae to see stats you link will be http://localhost:8080/aaaaaae/stats</p>
 
     <script>
@@ -31,13 +37,14 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    const responseContainer = document.getElementById('responseContainer');
                     if (data.errors) {
-                        const errorContainer = document.getElementById('responseContainer');
-                        errorContainer.innerHTML = 'Error: ' + data.errors.join(', ');
+                        responseContainer.innerHTML = 'Error: ' + data.errors.join(', ');
+                        responseContainer.style.color = 'red';
                     } else {
-                        const responseContainer = document.getElementById('responseContainer');
                         const linkForStats = document.getElementById('linkForStats');
-                        responseContainer.innerHTML = data.shortUrl;
+                        responseContainer.innerHTML = "Your short link is: " +  data.shortUrl;
+                        responseContainer.style.color = 'green';
                         linkForStats.innerHTML = `<a href="${data.shortUrl}/stats">Show short link stats</a>`;
                     }
                 })
