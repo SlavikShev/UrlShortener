@@ -30,6 +30,6 @@ class StatsController extends AbstractController
             ]);
         }
 
-        throw $this->createNotFoundException('Short link not found');
+        return $this->render('linkNotFound/linkNotFound.html.twig');
     }
 }

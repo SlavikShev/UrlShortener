@@ -6,7 +6,7 @@ use App\Command\UpdateUrlStatisticCommand;
 use App\Repository\UrlRepository;
 use App\Service\TransformUrlService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class RedirectController extends AbstractController
@@ -18,7 +18,7 @@ class RedirectController extends AbstractController
     ) {}
 
     #[Route('/{slug}', name: 'short_link', methods: ['GET'])]
-    public function redirectToFullUrl(string $slug): RedirectResponse
+    public function redirectToFullUrl(string $slug): Response
     {
         $urlId = $this->transformUrlService->decodeStringToNumber($slug);
 
@@ -29,6 +29,6 @@ class RedirectController extends AbstractController
             return $this->redirect($urlEntity->getValue());
         }
 
-        throw $this->createNotFoundException('Short link not found');
+        return $this->render('linkNotFound/linkNotFound.html.twig');
     }
 }
