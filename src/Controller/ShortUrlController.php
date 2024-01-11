@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ShortUrlController extends AbstractController
 {
-    #[Route('/short-url', name: 'app_short_url')]
+    #[Route('/short-url', name: 'app_short_url', methods: ['POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager, TransformUrlService $service, ValidatorInterface $validator): JsonResponse
     {
         $url = $request->get('url');
