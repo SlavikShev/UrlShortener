@@ -17,6 +17,9 @@ class Url
     #[ORM\Column(type: Types::TEXT)]
     private ?string $value = null;
 
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $clicksCount = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -32,5 +35,15 @@ class Url
         $this->value = $value;
 
         return $this;
+    }
+
+    public function getClicksCount(): int
+    {
+        return $this->clicksCount;
+    }
+
+    public function setClicksCount(int $clicksCount): void
+    {
+        $this->clicksCount = $clicksCount;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Command\UpdateUrlStatisticCommand;
 use App\Repository\UrlRepository;
 use App\Service\TransformUrlService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +13,8 @@ class RedirectController extends AbstractController
 {
     public function __construct(
         private readonly UrlRepository $urlRepository,
-        private readonly TransformUrlService $transformUrlService
+        private readonly TransformUrlService $transformUrlService,
+        private readonly UpdateUrlStatisticCommand $updateUrlStatisticCommand
     ) {}
 
     #[Route('/{slug}', name: 'short_link', methods: ['GET'])]
@@ -23,6 +25,7 @@ class RedirectController extends AbstractController
         $urlEntity = $this->urlRepository->find($urlId);
 
         if ($urlEntity) {
+            $this->updateUrlStatisticCommand->execute($urlEntity);
             return $this->redirect($urlEntity->getValue());
         }
 
