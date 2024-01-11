@@ -18,6 +18,7 @@ class ShortUrlController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, TransformUrlService $service, ValidatorInterface $validator): JsonResponse
     {
         $url = $request->get('url');
+        $url = trim($url);
 
         $constraints = [
             new NotBlank(),

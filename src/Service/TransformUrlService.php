@@ -24,6 +24,10 @@ class TransformUrlService
 
     function decodeStringToNumber(string $s): int
     {
+        if (empty($s)) {
+            throw new InvalidArgumentException("Input string cannot be empty");
+        }
+
         $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $base = strlen($charset);
         $result = 0;
