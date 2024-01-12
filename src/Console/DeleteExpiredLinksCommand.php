@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Command;
+namespace App\Console;
 
 use App\Entity\Url;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class DeleteExpiredLinksCommand extends Command
 {
@@ -43,5 +43,4 @@ class DeleteExpiredLinksCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }
