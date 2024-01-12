@@ -21,7 +21,6 @@ class RedirectController extends AbstractController
     public function redirectToFullUrl(string $slug): Response
     {
         $urlId = $this->transformUrlService->decodeStringToNumber($slug);
-
         $urlEntity = $this->urlRepository->find($urlId);
 
         if ($urlEntity) {

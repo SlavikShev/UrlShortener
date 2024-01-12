@@ -5,9 +5,9 @@ namespace App\Command;
 use App\Entity\Url;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UpdateUrlStatisticCommand
+readonly class UpdateUrlStatisticCommand
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private EntityManagerInterface $entityManager) {}
 
     public function execute(Url $url): void
     {
