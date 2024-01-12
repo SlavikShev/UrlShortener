@@ -6,34 +6,36 @@ use InvalidArgumentException;
 
 class TransformUrlService
 {
-    public function encodeNumberToString(int $n): string
+    public function encodeNumberToString(int $number): string
     {
-        if ($n < 1) {
+        if ($number < 1) {
             throw new InvalidArgumentException("Number must be greater than or equal to 1");
         }
+        $number = $number - 1;
 
-        $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $base = strlen($charset);
-        $result = '';
-        while ($n > 0) {
-            $result .= $charset[$n % $base - 1];
-            $n = floor($n / $base);
+        $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $base = strlen($characters);
+        $string = '';
+        while ($number > 0) {
+            $remainder = $number % $base;
+            $string = $characters[$remainder] . $string;
+            $number = ($number - $remainder) / $base;
         }
-        return str_pad($result, 7, 'a', STR_PAD_LEFT);
+        return str_pad($string, 7, 'a', STR_PAD_LEFT);
     }
 
-    function decodeStringToNumber(string $s): int
+    function decodeStringToNumber(string $string): int
     {
-        if (empty($s)) {
+        if (empty($string)) {
             throw new InvalidArgumentException("Input string cannot be empty");
         }
 
-        $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $base = strlen($charset);
-        $result = 0;
+        $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $base = strlen($characters);
+        $value = 0;
         for ($i = 0; $i < 7; $i++) {
-            $result = $result * $base + strpos($charset, $s[$i]);
+            $value = $value * $base + strpos($characters, $string[$i]);
         }
-        return $result + 1;
+        return $value + 1;
     }
 }
