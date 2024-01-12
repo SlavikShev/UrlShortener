@@ -4,10 +4,9 @@ namespace App\Entity;
 
 use App\Repository\UrlRepository;
 use DateInterval;
-use DateTimeZone;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Monolog\DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: UrlRepository::class)]
 class Url
@@ -60,7 +59,8 @@ class Url
 
     public function setExpiresAt(int $daysToLive): void
     {
-        $this->expiresAt = (new DateTimeImmutable(true, new DateTimeZone('UTC')))
-            ->add(new DateInterval("P{$daysToLive}D"));
+        $now = new DateTimeImmutable();
+        $interval = new DateInterval("P{$daysToLive}D");
+        $this->expiresAt = $now->add($interval);
     }
 }
