@@ -3,29 +3,33 @@
 namespace App\Controller;
 
 use App\Entity\Url;
+use App\Requests\ShortUrlRequest;
 use App\Service\TransformUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ShortUrlController extends AbstractController
 {
+    public function __construct(
+        private readonly SerializerInterface $serializer,
+        private readonly ValidatorInterface $validator,
+    ) {}
+
     #[Route('/short-url', name: 'app_short_url', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager, TransformUrlService $service, ValidatorInterface $validator): JsonResponse
+    public function index(Request $request, EntityManagerInterface $entityManager, TransformUrlService $service): JsonResponse
     {
-        $url = $request->get('url');
-        $url = trim($url);
+        $shortUrlRequest = $this->serializer->deserialize(
+            $request->getContent(),
+            ShortUrlRequest::class,
+            'json'
+        );
 
-        $constraints = [
-            new NotBlank(),
-            new \Symfony\Component\Validator\Constraints\Url()
-        ];
-
-        $violations = $validator->validate($url, $constraints);
+        $violations = $this->validator->validate($shortUrlRequest);
 
         if (count($violations) > 0) {
             $errors = [];
@@ -37,7 +41,8 @@ class ShortUrlController extends AbstractController
         }
 
         $urlEntity = new Url();
-        $urlEntity->setValue($url);
+        $urlEntity->setValue($shortUrlRequest->getUrl());
+        $urlEntity->setExpiresAt($shortUrlRequest->getDaysToLive());
         $entityManager->persist($urlEntity);
         $entityManager->flush();
 

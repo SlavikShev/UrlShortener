@@ -6,15 +6,24 @@
     <h2>Short your url</h2>
 
     <form id="shortUrlForm" class="form-inline mt-3">
-        <div class="form-group mb-2 d-flex">
+        <div class="form-group mb-2 d-flex align-items-end justify-content-around">
             <div class="col-sm-8">
                 <input type="text" class="form-control" name="url" id="urlInput" placeholder="Enter your URL">
             </div>
-            <div class="col-sm-2 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary mb-2">Short</button>
+            <div class="col-sm-2">
+                <label for="expirationSelect">Time to Live:</label>
+                <select class="form-control" name="daysToLive" id="daysToLive">
+                    <option value="1">1 Day</option>
+                    <option value="7">1 Week</option>
+                    <option value="30">1 Month</option>
+                </select>
+            </div>
+            <div class="col-sm-1 d-flex justify-content-center">
+                <button style="margin: 0!important;" type="submit" class="btn btn-primary mb-2">Short</button>
             </div>
         </div>
     </form>
+
 
     <div id="responseContainer"></div>
     <div id="linkForStats"></div>
@@ -26,14 +35,20 @@
         document.getElementById('shortUrlForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            var urlInput = document.getElementById('urlInput').value;
+            const urlInput = document.getElementById('urlInput').value;
+            const daysToLiveValue = document.getElementById('daysToLive').value;
+
+            const formData = {
+                url: urlInput,
+                daysToLive: +daysToLiveValue
+            };
 
             fetch('{{ path('app_short_url') }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'url=' + encodeURIComponent(urlInput),
+                body: JSON.stringify(formData),
             })
                 .then(response => response.json())
                 .then(data => {
