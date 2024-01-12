@@ -1,7 +1,7 @@
 version: '3'
 
 networks:
-  nginx-php-8.1-mysql8:
+  nginx-php-8.3-mysql8:
 
 services:
   nginx:
@@ -16,19 +16,19 @@ services:
       - php
       - mysql
     networks:
-      - nginx-php-8.1-mysql8
+      - nginx-php-8.3-mysql8
 
   php:
     build:
       context: .
       dockerfile: ./php/Dockerfile
-    container_name: php-container-8.1
+    container_name: php-container-8.3
     ports:
       - "9000:9000"
     volumes:
       - "../:/var/www/html"
     networks:
-      - nginx-php-8.1-mysql8
+      - nginx-php-8.3-mysql8
 
   mysql:
     image: mysql:8
@@ -43,4 +43,4 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_PASSWORD: secret
     networks:
-      - nginx-php-8.1-mysql8
+      - nginx-php-8.3-mysql8
