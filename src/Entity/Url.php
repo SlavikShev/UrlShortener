@@ -7,6 +7,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 #[ORM\Entity(repositoryClass: UrlRepository::class)]
 class Url
@@ -47,9 +48,11 @@ class Url
         return $this->clicksCount;
     }
 
-    public function setClicksCount(int $clicksCount): void
+    public function setClicksCount(int $clicksCount): static
     {
         $this->clicksCount = $clicksCount;
+
+        return $this;
     }
 
     public function getExpiresAt(): DateTimeImmutable
@@ -57,10 +60,23 @@ class Url
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(int $daysToLive): void
+    public function setExpiresAt(DateTimeImmutable $expiresAt): static
     {
+        $this->expiresAt = $expiresAt;
+
+        return $this;
+    }
+
+    public function setExpiresAtByDays(int $daysToLive): static
+    {
+        if ($daysToLive < 1) {
+            throw new InvalidArgumentException('Days to live must be greater than 0');
+        }
+
         $now = new DateTimeImmutable();
         $interval = new DateInterval("P{$daysToLive}D");
         $this->expiresAt = $now->add($interval);
+
+        return $this;
     }
 }

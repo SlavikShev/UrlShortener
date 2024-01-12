@@ -20,13 +20,13 @@ class DeleteExpiredLinksCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('app:delete-expired-links')
             ->setDescription('Deletes expired URL records');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $currentDateTime = new DateTimeImmutable();
 

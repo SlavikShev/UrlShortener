@@ -14,7 +14,7 @@ class CreateUrlCommand
     {
         $urlEntity = new Url();
         $urlEntity->setValue($shortUrlRequest->getUrl());
-        $urlEntity->setExpiresAt($shortUrlRequest->getDaysToLive());
+        $urlEntity->setExpiresAtByDays($shortUrlRequest->getDaysToLive());
         $this->entityManager->persist($urlEntity);
         $this->entityManager->flush();
 
