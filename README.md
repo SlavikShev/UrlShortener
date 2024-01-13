@@ -21,6 +21,8 @@ To deploy this project locally using Docker, follow these steps:
 
    Note: All make commands should be executed from within the `docker` folder.
 
+4. Open the project in your browser at `http://localhost:8080`. 
+
 ### Working with Docker
 
 - To open a bash shell inside the Docker container, run:
