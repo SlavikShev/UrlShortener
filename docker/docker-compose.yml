@@ -19,6 +19,8 @@ services:
       - nginx-php-8.3-mysql8
 
   php:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build:
       context: .
       dockerfile: ./php/Dockerfile
@@ -37,7 +39,7 @@ services:
       - "3306:3306"
     volumes:
       - "./mysql:/var/lib/mysql"
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: secret
